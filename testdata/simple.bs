@@ -1,0 +1,28 @@
+type Person {
+    x: int;
+    l: bool;
+    p: User;
+}
+
+type User {
+    order: int;
+}
+
+fn call_me(x: int, person: Person) -> Person {
+    let person:Person = {
+        x: 2,
+        l: false,
+        p: {
+            order: 10,
+        },
+    };
+    return person;
+}
+
+fn hello(x: int, user: User) -> int {
+    let x:int = 10;
+    for (x) {
+        let y:User;
+    }
+    return x;
+} 
