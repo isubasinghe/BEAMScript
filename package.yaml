@@ -27,6 +27,8 @@ dependencies:
   - base >= 4.7 && < 5
   - array ==0.5.4.0
   - mtl ==2.2.2
+  - llvm-hs-pure==9.0.0
+  - containers ==0.6.2.1
 
 library:
   source-dirs: src
