@@ -29,7 +29,7 @@ resolver: lts-16.16
 #   - auto-update
 #   - wai
 packages:
-- .
+  - .
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
@@ -42,8 +42,9 @@ packages:
 # extra-deps: []
 
 # Override default flag values for local packages and extra-deps
-# flags: {}
-
+flags:
+  llvm-hs:
+    shared-llvm: false
 # Extra package databases containing global packages
 # extra-package-dbs: []
 
