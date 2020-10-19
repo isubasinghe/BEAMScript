@@ -29,6 +29,7 @@ import BSAST
     let     { T_Let _ }
     for     { T_For _ }
     return  { T_Return _ }
+    mod     { T_Module _ }
     '&&'    { T_And _ }
     '->'    { T_ReturnT _ }
     ':'     { T_Colon _ }
@@ -46,7 +47,10 @@ import BSAST
 %%
 
 Program
-  : TypeDecls Functions { ProgramHappy $1 $2 }
+  : ModuleName TypeDecls Functions { ProgramHappy $1 $2 $3 }
+
+ModuleName
+  : mod string_ ';' { $2 }
 
 TypeDecls
   : {- empty -} { [] }
@@ -143,7 +147,7 @@ VarType
 
 {
 transformAST :: String -> Program -> Program
-transformAST f (ProgramHappy ts fs) = Program f ts fs
+transformAST f (ProgramHappy m ts fs) = Program f m ts fs
 
 
 parseFile :: String -> String -> Either String Program

@@ -4,6 +4,8 @@ type FileName = String
 
 type Ident = String
 
+type ModuleName = String
+
 data Source = Source [Program]
   deriving (Show)
 
@@ -11,8 +13,8 @@ data TypeDecl = TypeDecl Ident [(Ident, VarType)]
   deriving (Show)
 
 data Program
-  = Program FileName [TypeDecl] [Function]
-  | ProgramHappy [TypeDecl] [Function]
+  = Program FileName ModuleName [TypeDecl] [Function]
+  | ProgramHappy ModuleName [TypeDecl] [Function]
   deriving (Show)
 
 data VarType

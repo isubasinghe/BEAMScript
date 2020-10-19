@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fbe4f0641b9ddfc5f82f675f833cacecea1165bbe7a647bd8647bc4a5e9a99aa
+-- hash: 08ee3f2a297dc93ab1f757f552a3ebfe01f1d67150a5c305d2dc80ebf93addd8
 
 name:           BEAMScript
 version:        0.1.0.0
@@ -47,6 +47,7 @@ library
       array ==0.5.4.0
     , base >=4.7 && <5
     , containers ==0.6.2.1
+    , llvm-hs-pretty ==0.9.0.0
     , llvm-hs-pure ==9.0.0
     , mtl ==2.2.2
   default-language: Haskell2010
@@ -66,6 +67,7 @@ executable BEAMScript-exe
     , array ==0.5.4.0
     , base >=4.7 && <5
     , containers ==0.6.2.1
+    , llvm-hs-pretty ==0.9.0.0
     , llvm-hs-pure ==9.0.0
     , mtl ==2.2.2
   default-language: Haskell2010
@@ -86,6 +88,7 @@ test-suite BEAMScript-test
     , array ==0.5.4.0
     , base >=4.7 && <5
     , containers ==0.6.2.1
+    , llvm-hs-pretty ==0.9.0.0
     , llvm-hs-pure ==9.0.0
     , mtl ==2.2.2
   default-language: Haskell2010

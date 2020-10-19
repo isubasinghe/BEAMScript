@@ -32,6 +32,7 @@ rules :-
   let       { mkTok T_Let }
   for       { mkTok T_For }
   return    { mkTok T_Return }
+  mod       { mkTok T_Module }
   ⊸         { mkTok T_LinearArrow }
   &&        { mkTok T_And }
   \|\|      { mkTok T_Or }
@@ -109,7 +110,8 @@ data Token
     | T_Let AlexPosn
     | T_For AlexPosn 
     | T_Return AlexPosn
-    | T_LinearArrow AlexPosn 
+    | T_LinearArrow AlexPosn
+    | T_Module AlexPosn 
     deriving (Show, Eq)
 
 mkTok :: (AlexPosn -> Token) -> AlexPosn -> String -> Token 
