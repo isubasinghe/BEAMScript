@@ -1,13 +1,11 @@
 module Main where
 
-import BSAST
 import BSCodeGen.LLVM (compile)
-import BSParser
-import CLIParser
-import Data.Text.Lazy (Text)
+import BSParser (parseFile)
+import CLIParser (CLIOpts (inFile), execParser, opts)
 import qualified Data.Text.Lazy.IO as TLIO
 import LLVM.Pretty (ppllvm)
-import System.FilePath.Posix
+import System.FilePath.Posix (addExtension, splitExtension)
 
 compir :: FilePath -> IO ()
 compir f = do
