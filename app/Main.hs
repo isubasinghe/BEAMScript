@@ -15,6 +15,7 @@ compir f = do
     (Right p) -> TLIO.writeFile (addExtension (fst $ splitExtension f) ".ll") p
     (Left e) -> putStrLn e
 
+main :: IO [()]
 main = do
   opts <- execParser opts
   sequence $ map (compir) (inFile opts)
