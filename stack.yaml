@@ -41,6 +41,7 @@ packages:
 #
 extra-deps:
   - llvm-hs-pretty-0.9.0.0@sha256:b7a5de5f3dd97893d19d2b47af1e4dd8d075a5cf57062180a912d1f3ef1def60,1671
+  - optparse-applicative-0.16.0.0@sha256:de6f2a1be366a1f6db786883c605bbd121bbafbe41c4fff00a306672566b0e7f,4785
   - llvm-hs-9.0.1
 
 # Override default flag values for local packages and extra-deps

@@ -19,18 +19,22 @@ compileStruct (BSAST.TypeDecl n t) = TypeDefinition (mkName n) (Just StructureTy
   where
     types = (map (getType . snd) t)
 
+getParam :: BSAST.Param -> Parameter
+getParam (BSAST.Param v n) = Parameter (getType v) (mkName n) []
+{-# INLINE getParam #-}
+
 compileFunction :: BSAST.Function -> Definition
 compileFunction (BSAST.Function n ps r ss) =
   GlobalDefinition
     ( Function
-        { G.linkage = L.External,
+        { G.linkage = L.LinkOnce,
           G.visibility = V.Default,
           G.dllStorageClass = Nothing,
           G.callingConvention = CC.C,
           G.returnAttributes = [],
           G.returnType = getType r,
           G.name = mkName n,
-          G.parameters = ([], False),
+          G.parameters = (map getParam ps, False),
           G.functionAttributes = [],
           G.section = Nothing,
           G.comdat = Nothing,

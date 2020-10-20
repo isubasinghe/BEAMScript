@@ -30,6 +30,9 @@ dependencies:
   - llvm-hs-pure==9.0.0
   - llvm-hs-pretty ==0.9.0.0
   - containers ==0.6.2.1
+  - optparse-applicative ==0.16.0.0
+  - filepath ==1.4.2.1
+  - text ==1.2.4.0
 
 library:
   source-dirs: src

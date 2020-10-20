@@ -1,14 +1,22 @@
 module Main where
 
-import System.Environment
-import BSParser
-import BSLexer
 import BSAST
+import BSCodeGen.LLVM (compile)
+import BSParser
+import CLIParser
+import Data.Text.Lazy (Text)
+import qualified Data.Text.Lazy.IO as TLIO
+import LLVM.Pretty (ppllvm)
+import System.FilePath.Posix
+
+compir :: FilePath -> IO ()
+compir f = do
+  input <- readFile f
+  let out = ppllvm <$> compile <$> (parseFile f input)
+  case out of
+    (Right p) -> TLIO.writeFile (addExtension (fst $ splitExtension f) ".ll") p
+    (Left e) -> putStrLn e
 
 main = do
-    args <- getArgs
-    let sourceFile = args !! 0
-    source <- readFile sourceFile
-    let x = show $ parseFile sourceFile source
-    putStrLn x
-
+  opts <- execParser opts
+  sequence $ map (compir) (inFile opts)
