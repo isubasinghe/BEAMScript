@@ -1,8 +1,23 @@
 module BSCodeGen.LLVM where
 
 import qualified BSAST as BSAST
-import Data.String
+import Data.String (IsString (fromString))
 import LLVM.AST
+  ( Definition (GlobalDefinition, TypeDefinition),
+    Global (Function),
+    Module (..),
+    Parameter (..),
+    Type
+      ( IntegerType,
+        NamedTypeReference,
+        StructureType,
+        VoidType,
+        elementTypes,
+        isPacked,
+        typeBits
+      ),
+    mkName,
+  )
 import qualified LLVM.AST.CallingConvention as CC
 import qualified LLVM.AST.Global as G
 import qualified LLVM.AST.Linkage as L

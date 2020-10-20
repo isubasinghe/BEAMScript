@@ -1,6 +1,30 @@
 module CLIParser (cliopts, CLIOpts (..), execParser, opts) where
 
 import Options.Applicative
+  ( Alternative (some),
+    Mod,
+    OptionFields,
+    Parser,
+    ParserInfo,
+    auto,
+    execParser,
+    fullDesc,
+    header,
+    help,
+    helper,
+    info,
+    long,
+    metavar,
+    option,
+    progDesc,
+    short,
+    showDefault,
+    str,
+    strOption,
+    switch,
+    value,
+    (<**>),
+  )
 
 data CLIOpts = CLIOpts
   { inFile :: [String],
