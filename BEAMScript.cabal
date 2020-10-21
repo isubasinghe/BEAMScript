@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fba11de5ba035a502fcd56c0ebc5a2d5cef93a14454869689c6c24670b958c49
+-- hash: 708ea6dc4b55e7d65f513cc4e072acdf57ef2919d22dbb888a5aba76f04e858f
 
 name:           BEAMScript
 version:        0.1.0.0
@@ -35,7 +35,6 @@ library
       BSOpt
       BSParser
       BSSymbolTable
-      Lib
   other-modules:
       Paths_BEAMScript
   hs-source-dirs:
