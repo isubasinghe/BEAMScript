@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 708ea6dc4b55e7d65f513cc4e072acdf57ef2919d22dbb888a5aba76f04e858f
+-- hash: f95ac88c817535a162089d73360489b35ee1cdbe48d987633ef332a4e286a5f4
 
 name:           BEAMScript
 version:        0.1.0.0
@@ -46,7 +46,9 @@ library
       array ==0.5.4.0
     , base >=4.7 && <5
     , containers ==0.6.2.1
+    , directory ==1.3.6.1
     , filepath ==1.4.2.1
+    , llvm-hs ==9.0.1
     , llvm-hs-pretty ==0.9.0.0
     , llvm-hs-pure ==9.0.0
     , mtl ==2.2.2
@@ -70,7 +72,9 @@ executable BEAMScript-exe
     , array ==0.5.4.0
     , base >=4.7 && <5
     , containers ==0.6.2.1
+    , directory ==1.3.6.1
     , filepath ==1.4.2.1
+    , llvm-hs ==9.0.1
     , llvm-hs-pretty ==0.9.0.0
     , llvm-hs-pure ==9.0.0
     , mtl ==2.2.2
@@ -94,7 +98,9 @@ test-suite BEAMScript-test
     , array ==0.5.4.0
     , base >=4.7 && <5
     , containers ==0.6.2.1
+    , directory ==1.3.6.1
     , filepath ==1.4.2.1
+    , llvm-hs ==9.0.1
     , llvm-hs-pretty ==0.9.0.0
     , llvm-hs-pure ==9.0.0
     , mtl ==2.2.2

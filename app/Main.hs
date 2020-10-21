@@ -1,21 +1,34 @@
+{-# LANGUAGE BlockArguments #-}
+
 module Main where
 
-import BSCodeGen.LLVM (compile)
+import BSCodeGen.LLVM (compileExe, compileModule, compilePretty)
 import BSParser (parseFile)
-import CLIParser (CLIOpts (inFile), execParser, opts)
+import CLIParser (CLIOpts (inFile), emitLLVM, execParser, opts)
 import qualified Data.Text.Lazy.IO as TLIO
 import LLVM.Pretty (ppllvm)
 import System.FilePath.Posix (addExtension, splitExtension)
 
-compir :: FilePath -> IO ()
-compir f = do
+data CompMode = Pretty | BitCode
+  deriving (Show, Eq)
+
+compir :: CompMode -> FilePath -> IO ()
+compir c f = do
   input <- readFile f
-  let out = ppllvm <$> compile <$> (parseFile f input)
-  case out of
-    (Right p) -> TLIO.writeFile (addExtension (fst $ splitExtension f) ".ll") p
+  let mod = compileModule <$> (parseFile f input)
+  case mod of
+    (Right mod') -> fn mod' (addExtension fileName ext)
     (Left e) -> putStrLn e
+  where
+    fileName = fst $ splitExtension f
+    (fn, ext) = case c of
+      (Pretty) -> (compilePretty, ".ll")
+      (BitCode) -> (compileExe, ".lr")
 
 main :: IO [()]
 main = do
   opts <- execParser opts
-  sequence $ map (compir) (inFile opts)
+  let emitLLVMFlag = emitLLVM opts
+  if emitLLVMFlag
+    then sequence $ map (compir Pretty) (inFile opts)
+    else sequence $ map (compir BitCode) (inFile opts)

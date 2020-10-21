@@ -2,6 +2,9 @@ module BSCodeGen.LLVM where
 
 import qualified BSAST as BSAST
 import Data.String (IsString (fromString))
+import qualified Data.Text.Lazy.IO as TLIO
+import Debug.Trace
+import qualified LLVM as LLVM
 import LLVM.AST
   ( Definition (GlobalDefinition, TypeDefinition),
     Global (Function),
@@ -22,6 +25,10 @@ import qualified LLVM.AST.CallingConvention as CC
 import qualified LLVM.AST.Global as G
 import qualified LLVM.AST.Linkage as L
 import qualified LLVM.AST.Visibility as V
+import qualified LLVM.Analysis as A
+import qualified LLVM.Context as C
+import LLVM.Pretty (ppllvm)
+import System.Directory
 
 getType :: BSAST.VarType -> Type
 getType (BSAST.VBool) = IntegerType {typeBits = 8} -- one byte for booleans
@@ -35,14 +42,14 @@ compileStruct (BSAST.TypeDecl n t) = TypeDefinition (mkName n) (Just StructureTy
     types = (map (getType . snd) t)
 
 getParam :: BSAST.Param -> Parameter
-getParam (BSAST.Param v n) = Parameter (getType v) (mkName n) []
+getParam (BSAST.Param v n) = traceShow (Parameter (getType v) (mkName n) []) (Parameter (getType v) (mkName n) [])
 {-# INLINE getParam #-}
 
 compileFunction :: BSAST.Function -> Definition
 compileFunction (BSAST.Function n ps r ss) =
   GlobalDefinition
     ( Function
-        { G.linkage = L.LinkOnce,
+        { G.linkage = L.External,
           G.visibility = V.Default,
           G.dllStorageClass = Nothing,
           G.callingConvention = CC.C,
@@ -62,8 +69,8 @@ compileFunction (BSAST.Function n ps r ss) =
         }
     )
 
-compile :: BSAST.Program -> Module
-compile (BSAST.Program f m ss fs) =
+compileModule :: BSAST.Program -> Module
+compileModule (BSAST.Program f m ss fs) =
   Module
     { moduleName = fromString m,
       moduleSourceFileName = fromString f,
@@ -74,3 +81,15 @@ compile (BSAST.Program f m ss fs) =
   where
     structs = map compileStruct ss
     functinos = map compileFunction fs
+
+compilePretty :: Module -> String -> IO ()
+compilePretty m f = TLIO.writeFile f (ppllvm m)
+
+compileExe :: Module -> String -> IO ()
+compileExe m s =
+  C.withContext $
+    \ctx ->
+      LLVM.withModuleFromAST
+        ctx
+        m
+        (\mod -> A.verify mod >> LLVM.writeBitcodeToFile (LLVM.File s) mod)
