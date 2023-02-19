@@ -7,48 +7,48 @@ packages:
 - completed:
     hackage: llvm-hs-pretty-0.9.0.0@sha256:b7a5de5f3dd97893d19d2b47af1e4dd8d075a5cf57062180a912d1f3ef1def60,1671
     pantry-tree:
-      size: 4685
       sha256: 8cf6d628bb4f962575ad0993bb1010e9989cea00b325b8a45ac35ac201061386
+      size: 4685
   original:
     hackage: llvm-hs-pretty-0.9.0.0@sha256:b7a5de5f3dd97893d19d2b47af1e4dd8d075a5cf57062180a912d1f3ef1def60,1671
 - completed:
     hackage: optparse-applicative-0.16.0.0@sha256:de6f2a1be366a1f6db786883c605bbd121bbafbe41c4fff00a306672566b0e7f,4785
     pantry-tree:
-      size: 2979
       sha256: fabeefe6fe000bbc1ba8d0a10e9452197e882f625937a8b6f40afec14d03eba4
+      size: 2979
   original:
     hackage: optparse-applicative-0.16.0.0@sha256:de6f2a1be366a1f6db786883c605bbd121bbafbe41c4fff00a306672566b0e7f,4785
 - completed:
-    hackage: llvm-hs-9.0.1@sha256:ee6ec2eb8cba4daf2a43586388a87dbfd6a2ec6d81d1f9965896ac187acad286,8700
-    pantry-tree:
-      size: 13599
-      sha256: 537616dec1351bd9f7905182f82f132359cf3058ebbb059c03b4edcef04b2689
-  original:
-    hackage: llvm-hs-9.0.1
-- completed:
     hackage: directory-1.3.6.1@sha256:3dc9c69c8e09ec95a7a45c6d06abe0f0d2f604439c37e5f88e5a6c335b088d71,2810
     pantry-tree:
-      size: 3433
       sha256: 9247d0e7cfbf9946b922d23bd56a6b765cdb91f71d72f8ae6ed22c94dbd9f1db
+      size: 3433
   original:
     hackage: directory-1.3.6.1@sha256:3dc9c69c8e09ec95a7a45c6d06abe0f0d2f604439c37e5f88e5a6c335b088d71,2810
 - completed:
     hackage: Cabal-3.2.0.0@sha256:d0d7a1f405f25d0000f5ddef684838bc264842304fd4e7f80ca92b997b710874,27320
     pantry-tree:
-      size: 40963
       sha256: b122f2d76dc82a350d3986fa0cbc4ecf9c3bb4f9c598ccbfb3b2bfdde02f3698
+      size: 40963
   original:
     hackage: Cabal-3.2.0.0@sha256:d0d7a1f405f25d0000f5ddef684838bc264842304fd4e7f80ca92b997b710874,27320
 - completed:
     hackage: process-1.6.10.0@sha256:c0d2d8adaca7cea7ceaa60e67b61c775dc03727b83bdb1c97aa8cbeac9f5dd84,2469
     pantry-tree:
-      size: 1211
       sha256: 6e90778b5105753d7de0f7a0c502dadf8f04825f17a36186aa801e56ef7ca206
+      size: 1211
   original:
     hackage: process-1.6.10.0@sha256:c0d2d8adaca7cea7ceaa60e67b61c775dc03727b83bdb1c97aa8cbeac9f5dd84,2469
+- completed:
+    hackage: hegg-0.3.0.0@sha256:913a91c7326a767626d6bc949ea38af857cc6dee22b3e49270f7342e2b2bf762,5718
+    pantry-tree:
+      sha256: 14f9d1f8409bdbf66deaac5a7e38792ed55a56bbbcbb175bd3fa9dd334b754e4
+      size: 2313
+  original:
+    hackage: hegg-0.3.0.0@sha256:913a91c7326a767626d6bc949ea38af857cc6dee22b3e49270f7342e2b2bf762,5718
 snapshots:
 - completed:
+    sha256: d6b004b095fe2a0b8b14fbc30014ee97e58843b9c9362ddb9244273dda62649e
     size: 532380
     url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/16.yaml
-    sha256: d6b004b095fe2a0b8b14fbc30014ee97e58843b9c9362ddb9244273dda62649e
   original: lts-16.16

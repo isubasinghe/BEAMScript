@@ -27,10 +27,10 @@ import Options.Applicative
   )
 
 data CLIOpts = CLIOpts
-  { inFile :: [String],
-    outFile :: String,
-    emitLLVM :: Bool,
-    optimisationLevel :: Int
+  { inFile :: ![String],
+    outFile :: !String,
+    emitLLVM :: !Bool,
+    optimisationLevel :: !Int
   }
   deriving (Show, Eq)
 

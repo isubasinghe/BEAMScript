@@ -1,10 +1,9 @@
 module BSCodeGen.LLVM where
 
-import qualified BSAST as BSAST
+import qualified BSAST
 import Data.String (IsString (fromString))
 import qualified Data.Text.Lazy.IO as TLIO
 import Debug.Trace
-import qualified LLVM as LLVM
 import LLVM.AST
   ( Definition (GlobalDefinition, TypeDefinition),
     Global (Function),
@@ -25,8 +24,6 @@ import qualified LLVM.AST.CallingConvention as CC
 import qualified LLVM.AST.Global as G
 import qualified LLVM.AST.Linkage as L
 import qualified LLVM.AST.Visibility as V
-import qualified LLVM.Analysis as A
-import qualified LLVM.Context as C
 import LLVM.Pretty (ppllvm)
 import System.Directory
 
@@ -85,11 +82,3 @@ compileModule (BSAST.Program f m ss fs) =
 compilePretty :: Module -> String -> IO ()
 compilePretty m f = TLIO.writeFile f (ppllvm m)
 
-compileExe :: Module -> String -> IO ()
-compileExe m s =
-  C.withContext $
-    \ctx ->
-      LLVM.withModuleFromAST
-        ctx
-        m
-        (\mod -> A.verify mod >> LLVM.writeBitcodeToFile (LLVM.File s) mod)
