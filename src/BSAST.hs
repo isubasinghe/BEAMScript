@@ -44,7 +44,6 @@ data Statement
   = If !Expr ![Statement] ![(Expr, [Statement])] ![Statement]
   | For !Expr ![Statement]
   | Decl !Ident !VarType
-  | AssignRecord !Ident ![(Ident, Expr)]
   | AssignDecl !Ident !VarType !Expr
   | Assign !Expr !Expr
   | Call !Ident ![Expr]

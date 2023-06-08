@@ -9,6 +9,7 @@ import CLIParser (CLIOpts (inFile), emitLLVM, execParser, opts)
 import qualified Data.Text.Lazy.IO as TLIO
 import LLVM.Pretty (ppllvm)
 import System.FilePath.Posix (addExtension, splitExtension)
+import BSTyCheck
 
 data CompMode = Pretty | BitCode
   deriving (Show, Eq)
@@ -26,10 +27,14 @@ compir c f = do
       Pretty -> (compilePretty, ".ll")
       _others -> error "not implemented yet" 
 
-main :: IO [()]
+main :: IO ()
 main = do
   opts <- execParser opts
-  let emitLLVMFlag = emitLLVM opts
+  input <- readFile (head $ inFile opts)
+  let mod = getProgState <$> parseFile (head $ inFile opts) input
+  print mod
+
+  {- let emitLLVMFlag = emitLLVM opts
   if emitLLVMFlag
     then mapM (compir Pretty) (inFile opts)
-    else mapM (compir BitCode) (inFile opts)
+    else mapM (compir BitCode) (inFile opts) -}
