@@ -25,7 +25,7 @@ data VarType
   | VString
   | VBool
   | Void
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 data Function = Function !Ident ![Param] !VarType ![Statement]
   deriving (Show)

@@ -35,7 +35,6 @@ library
       BSLexer
       BSOpt
       BSParser
-      BSSymbolTable
       BSTyCheck
   other-modules:
       Paths_BEAMScript
