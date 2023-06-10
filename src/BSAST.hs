@@ -33,11 +33,27 @@ data Function = Function !Ident ![Param] !VarType ![Statement]
 data Param = Param !VarType !Ident
   deriving (Show)
 
+
+data Op 
+  = BAdd 
+  | BMinus
+  | BMul 
+  | BDiv 
+  | BLe 
+  | BLeq 
+  | BGe 
+  | BGeq 
+  | BAnd
+  | BEq
+  | BNeq
+  deriving (Show, Eq) 
+
 data Expr
   = Constant !Constant
   | LId !Ident
   | Record ![(Ident, Expr)]
   | CallRVal !Ident ![Expr]
+  | BinOp Op Expr Expr
   deriving (Show)
 
 data Statement

@@ -38,12 +38,26 @@ import BSAST
     '{'     { T_LBrace _ }
     '}'     { T_RBrace _ }
     ','     { T_Comma _ }
+    '!='    { T_Neq _ }
+    '=='    { T_Eq _ }
+    '<'     { T_Lesser _ }
+    '<='    { T_LesserEq _ }
+    '>'     { T_Greater _ }
+    '>='    { T_GreaterEq _ }
     '='     { T_Assign _ }
     ';'     { T_Semi _ }
+    '+'     { T_Add _ }
+    '-'     { T_Sub _ }
+    '*'     { T_Mul _ }
+    '/'     { T_Div _ }
     ident   { T_Ident _ $$ }
     string_ { T_String _ $$ }
-    number  { T_Number _ $$ }    
+    number  { T_Number _ $$ }
 
+%left '&&'
+%nonassoc '==' '!=' '<' '<=' '>' '>='
+%left '+' '-'
+%left '*' '/'
 %%
 
 Program
@@ -91,6 +105,15 @@ params
 param 
   : ident ':' VarType { Param $3 $1}
 
+
+eparams 
+  : {- empty -} { [] }
+  | eparams_ { $1 } 
+
+eparams_
+  : Expr { [$1] }
+  | Expr ',' eparams_ { $1:$3 }
+
 Statements
   : {- empty -} { [] }
   | statement Statements { $1:$2 }
@@ -102,6 +125,7 @@ statement
   | if Expr '{' Statements '}' elseifs else '{' Statements '}' { If $2 $4 $6 $9 }
   | if Expr '{' Statements '}' elseifs { If $2 $4 $6 [] }
   | for Expr '{' Statements '}' { For $2 $4 }
+  | ident '(' eparams ')' ';' { Call $1 $3 }
   | '{' Statements '}' { Block $2 }
   | return Expr ';' { ReturnExpr $2 }
   | return ';' { Return }
@@ -118,9 +142,20 @@ elseif_
 Expr
   : Constant { Constant $1 }
   | ident { LId $1 }
+  | ident '(' eparams ')' { CallRVal $1 $3 }
   | '(' Expr ')' { $2 }
   | '{' exprFields '}' { Record $2 }
-
+  | Expr '&&' Expr  { BinOp BAnd $1 $3 }
+  | Expr '!=' Expr { BinOp BNeq $1 $3 }
+  | Expr '==' Expr { BinOp BEq $1 $3 }
+  | Expr '>' Expr { BinOp BGe $1 $3 }
+  | Expr '>=' Expr { BinOp BGeq $1 $3 }
+  | Expr '<' Expr { BinOp BLe $1 $3 }
+  | Expr '<=' Expr { BinOp BLeq $1 $3 }
+  | Expr '+' Expr { BinOp BAdd $1 $3 } 
+  | Expr '*' Expr { BinOp BMul $1 $3 }
+  | Expr '/' Expr { BinOp BDiv $1 $3 }
+  | Expr '-' Expr { BinOp BMinus $1 $3 }
 exprFields
   : exprField { [$1] }
   | exprField ',' exprFields_ { $1:$3 }

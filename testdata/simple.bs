@@ -23,8 +23,17 @@ fn call_me(x: int, person: Person) -> Person {
 
 fn hello(x: int, user: User) -> int {
     let x:int = 10;
-    for (x) {
+    for (x > 0) {
         let y:User;
     }
+    let p: Person = {
+      x: 2, 
+      l: false, 
+      p: {
+        order: 43, 
+      },
+    };
+    call_me(23, p);
+    p = call_me(23, p);
     return x;
 } 
