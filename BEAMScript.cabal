@@ -1,10 +1,8 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.35.1.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 3c268a5c786889a396e63ab9d966e2b2b10d0598b05d6fb2c243d914e7f83c6b
 
 name:           BEAMScript
 version:        0.1.0.0
@@ -36,6 +34,8 @@ library
       BSOpt
       BSParser
       BSTyCheck
+      MiniVM.AST
+      MiniVM.IRBuilder
   other-modules:
       Paths_BEAMScript
   hs-source-dirs:

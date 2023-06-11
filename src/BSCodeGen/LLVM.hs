@@ -78,6 +78,7 @@ compileModule (BSAST.Program f m ss fs) =
   where
     structs = map compileStruct ss
     functinos = map compileFunction fs
+compileModule (BSAST.ProgramHappy f rs fs) = compileModule (BSAST.Program f "unknown" rs fs)
 
 compilePretty :: Module -> String -> IO ()
 compilePretty m f = TLIO.writeFile f (ppllvm m)
