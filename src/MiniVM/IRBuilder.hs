@@ -30,7 +30,8 @@ import qualified MiniVM.AST as A
 
 data IRBuilderState = IRBuilderState
   { builderSupply :: !Int,
-    builderStatements :: [A.Statement]
+    builderStatements :: [A.Statement],
+    builderModule :: String
   }
 
 newtype IRBuilderT m a = IRBuilderT {unIRBuilderT :: StateT IRBuilderState m a}
@@ -66,12 +67,14 @@ freshReg = liftIRState $ do
 
 buildFunc :: MonadIRBuilder m => String -> m () -> m ()
 buildFunc s fn = do
-  fn 
-  liftIRState $ do
-  modify $ \s -> s {builderSupply = 0}
-
-
-buildModule :: MonadIRBuilder m => String -> m () -> m () 
-buildModule mname fn = do 
   fn
+  liftIRState $ do
+    modify $ \s -> s {builderSupply = 0}
+
+buildModule :: MonadIRBuilder m => String -> m () -> m ()
+buildModule mname fn = do 
+  liftIRState $ do 
+    modify $ \s -> s{builderModule = mname}
+  fn
+
 
