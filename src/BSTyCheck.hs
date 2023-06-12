@@ -126,45 +126,52 @@ checkAssertExpr v e = case e of
     ty <- checkExpr e
     liftAssert v ty
 
-checkStatement :: Statement -> TyCtx (Maybe VarType)
-checkStatement (If cond rss lss as) = do
+checkStatement :: VarType -> Statement -> TyCtx (Maybe VarType)
+checkStatement v (If cond rss lss as) = do
   condty <- checkExpr cond
   liftAssert condty VBool
   es <- mapM (\(e, _) -> checkExpr e) lss
   mapM_ (`liftAssert` VBool) es
   pure Nothing
-checkStatement (For cond ss) = do
+checkStatement v (For cond ss) = do
   condty <- checkExpr cond
   liftAssert condty VBool
   pure Nothing
-checkStatement (Decl ident varty) = do
+checkStatement v (Decl ident varty) = do
   s <- get
   liftAssertValidType varty
   let vars' = M.insert ident varty (vars s)
   put $ s {vars = vars'}
   pure Nothing
-checkStatement (AssignDecl id ty e) = do
+checkStatement v (AssignDecl id ty e) = do
   checkAssertExpr ty e
   s <- get
   let vars' = vars s
   put $ s {vars = M.insert id ty vars'}
   pure Nothing
-checkStatement (Assign lhs rhs) = do
+checkStatement v (Assign lhs rhs) = do
   lhsty <- checkExpr lhs
   rhsty <- checkExpr rhs
   liftAssert lhsty rhsty
   pure Nothing
-checkStatement (Call ident args) = do
+checkStatement v (Call ident args) = do
   s <- get
   let fns' = fns s
   case M.lookup ident fns' of
     Just (argsty, retty) -> do
       liftAssertFnCall retty ident args
-      pure $ Just retty
+      pure Nothing
     Nothing -> throwError $ TyError (ident ++ " is not a valid function")
-checkStatement (ReturnExpr e) = Just <$> checkExpr e
-checkStatement Return = pure Nothing
-checkStatement (Block ss) = error "Block statements are not supported yet"
+checkStatement v (ReturnExpr e) = do
+  ty <- checkExpr e
+  if ty /= v
+    then throwError $ TyError ("invalid type in expr " ++ show e ++ " type " ++ show ty ++ " expecting " ++ show v)
+    else pure $ Just v
+checkStatement v Return = do
+  if v /= Void
+    then throwError $ TyError ("return type must be " ++ show v)
+    else pure Nothing
+checkStatement v (Block ss) = error "Block statements are not supported yet"
 
 -- structurally match for Record types (ewww)
 checkExpr :: Expr -> TyCtx VarType
@@ -230,16 +237,33 @@ collectIdents (v : vs) =
     (VType ident) -> ident : collectIdents vs
     _ -> collectIdents vs
 
+-- checkLastStatement
+
+checkStatementTys :: Statement -> VarType -> TyCtx ()
+checkStatementTys = undefined
+
+lastItem :: [a] -> Maybe a
+lastItem [] = Nothing
+lastItem [a] = Just a
+lastItem (a : as) = lastItem as
+
 checkFunction :: Function -> TyCtx ()
 checkFunction (Function name params retsort statements) = do
   liftAssertFnExists name
   let ptypes = map (\(Param vty _) -> vty) params
   mapM_ liftAssertValidType ptypes
   liftAssertValidType retsort
-  mapM_ checkStatement statements
-  s <- get
-  let vars' = M.empty
-  put $ s {vars = vars'}
+  stys <- mapM (checkStatement retsort) statements
+  let validLast = case lastItem stys of
+        Just lastTy -> lastTy == Just retsort
+        Nothing -> True
+  if validLast
+    then do
+      s <- get
+      let vars' = M.empty
+      put $ s {vars = vars'}
+    else do
+      throwError $ TyError ("last statement's type does not match return type of " ++ show retsort)
 
 checkRecord :: TypeDecl -> TyCtx ()
 checkRecord (TypeDecl tname mappings) = do

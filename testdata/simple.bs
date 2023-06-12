@@ -35,5 +35,5 @@ fn hello(x: int, user: User) -> int {
     };
     call_me(23, p);
     p = call_me(23, p);
-    return x;
+    return 0;
 } 
