@@ -4,6 +4,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE RankNTypes #-}
 -- For MonadState s (ModuleBuilderT m) instance
 {-# LANGUAGE UndecidableInstances #-}
 
@@ -25,13 +26,17 @@ import Control.Monad.Trans.Maybe
 import Control.Monad.Writer.Lazy as Lazy
 import Control.Monad.Writer.Strict as Strict
 import Data.Bifunctor
+import qualified Data.DList as DL
 import Data.String
 import qualified MiniVM.AST as A
 
 data IRBuilderState = IRBuilderState
   { builderSupply :: !Int,
-    builderStatements :: [A.Statement],
-    builderModule :: String
+    builderStatements :: DL.DList A.Statement,
+    builderModule :: !String,
+    builderFunction :: !(Maybe String),
+    builderLoopLabelSupply :: !Int, 
+    builderCondLabelSupply :: !Int
   }
 
 newtype IRBuilderT m a = IRBuilderT {unIRBuilderT :: StateT IRBuilderState m a}
@@ -69,12 +74,44 @@ buildFunc :: MonadIRBuilder m => String -> m () -> m ()
 buildFunc s fn = do
   fn
   liftIRState $ do
-    modify $ \s -> s {builderSupply = 0}
+    modify $ \s -> s {builderSupply = 0, builderLoopLabelSupply = 0}
 
 buildModule :: MonadIRBuilder m => String -> m () -> m ()
-buildModule mname fn = do 
-  liftIRState $ do 
-    modify $ \s -> s{builderModule = mname}
+buildModule mname fn = do
+  liftIRState $ do
+    modify $ \s -> s {builderModule = mname}
   fn
+
+buildStatement :: MonadIRBuilder m => A.Statement -> m ()
+buildStatement stmt = liftIRState $ do
+  dlist <- gets builderStatements
+  let dlist' = DL.insert stmt dlist
+  modify $ \s -> s {builderStatements = dlist'}
+
+buildLabel :: MonadIRBuilder m => String -> m A.LabelName
+buildLabel lname = do
+  let label = A.LabelName lname
+  let stmt = A.Label label
+  buildStatement stmt
+  pure label
+
+buildLoopHeader :: MonadIRBuilder m => m A.LabelName
+buildLoopHeader = do 
+    label <- liftIRState $ do
+      mname <- gets builderModule
+      fname <- gets builderFunction
+      supply <- gets builderLoopLabelSupply
+      case fname of
+        Just fname -> do
+          modify $ \s -> s {builderLoopLabelSupply = supply + 1}
+          pure (mname ++ "." ++ fname ++ "." ++ show supply)
+        Nothing -> error "buildLoopHeader must be called inside buildFunc" 
+    buildLabel label
+
+
+buildLoopHeaderEnd :: MonadIRBuilder m =>  A.LabelName -> m A.LabelName 
+buildLoopHeaderEnd (A.LabelName lname) = do 
+  let endName = lname ++ ".end"
+  buildLabel endName
 
 
